@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <strings.h>
+#include <string.h>
 
-struct Hero exStruct();
-void printStruct(struct Hero this);
+struct Hero exHero();
+void printHero(struct Hero hero);
+void modifyHero(struct Hero *hero, int hit_points);
 
 struct Hero {
   char* name;
@@ -47,6 +48,10 @@ void printStruct(struct Hero hero){
   printf("Hero Name: %s\nHit Points: %d\nUltimate: %s\n", hero.name, hero.hp, hero.ult);
 }
 
+void modifyHero(struct Hero *hero, int hit_points){
+  hero->hp = hit_points;
+}
+
 int main(){
   struct Hero hero1 = exStruct();
   printf("Here is an example of a hero from the game \"Overwatch\":\n");
@@ -54,6 +59,20 @@ int main(){
   printf("\n");
   sleep(1);
   struct Hero hero2 = exStruct();
+  while (strcmp(hero1.name, hero2.name) == 0){
+    sleep(1);
+    hero2 = exStruct();
+  }
   printf("Here is another example:\n");
   printStruct(hero2);
+  printf("\n");
+  printf("Oh no, %s got hit directly by a D.Va Self-Destruct!\n", hero1.name);
+  modifyHero(&hero1, 0);
+  printf("Look at its hit points now: %d\n\n", hero1.hp);
+  modifyHero(&hero2, (int) (hero2.hp / 2));
+  printf("Sigma lifted %s with Gravitic Flux and now they've fallen. Their health is now halved to %d.\n",
+          hero2.name, hero2.hp);
+  modifyHero(&hero2, hero2.hp + 75);
+  printf("Luckily, they are healed for 75 health by Ana and %s's health is now: %d\n",
+          hero2.name, hero2.hp);
 }
